@@ -7,12 +7,7 @@ def new_game
   player_hand = []
   dealer_hand = []
   
-  deck = []
-  values.each do |value|
-    suits.each do |suit|
-      deck << [value, suit]
-    end
-  end
+  deck = values.product(suits)
   deck.shuffle! 
 
   player_hand << draw_card(deck) << draw_card(deck)
@@ -25,23 +20,33 @@ def new_game
   puts "The dealer's hand is: #{dealer_hand[0][0]} of #{dealer_hand[0][1]}" + 
        " and #{dealer_hand[1][0]} of #{dealer_hand[1][1]}."
 
-  dealer_turn(dealer_hand)
-  # Start player's turn
-  puts deck.length
+  dealer_turn(dealer_hand, deck)
 
+  puts "Again: remaining cards: #{deck.length}"
+  puts "Again: dealer card count: #{dealer_hand.length}"
 end
 
 def draw_card(deck)
   deck.slice!(0)
 end
 
-def dealer_turn(dealer_hand)
+def dealer_turn(dealer_hand, deck)
   puts "-------------------------------------"
   puts "Dealer's Turn!!"
+  while calculate_sum(dealer_hand) < 17
+    puts "Dealer Hits!"
+    dealer_hand << draw_card(deck)
+  end
 
+  if calculate_sum(dealer_hand) > 21
+    puts "Dealer busts, you win!!"
+    calculate_sum(dealer_hand)
+  else
+    calculate_sum(dealer_hand)
+  end
 end
 
-def hand_total(hand)
+def calculate_sum(hand)
   total = 0
   hand.each do |card|
     total += convert_to_value(card[0])
@@ -61,5 +66,4 @@ def convert_to_value(card)
   end
 end
 
-# new_game
-# puts hand_total([[5, ""],["King", ""], ["Ace",""], [10,""]])
+new_game
