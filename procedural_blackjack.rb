@@ -20,16 +20,17 @@ def new_game
   puts "Dealer Total: #{calculate_sum(dealer_hand)}"
 
   # gameplay logic
-  player_result = player_turn(player_hand, deck)  # invoke player_turn method
+  player_result = player_turn(player_hand, deck)  # calls player_turn method
   if player_result > 21
     puts "Player Busts. Player Loses..."
-  elsif player_result == 21
-    puts "BLACKJACK!!!"
   else 
-    dealer_result = dealer_turn(dealer_hand, deck) # invoke dealer_turn method
+    dealer_result = dealer_turn(dealer_hand, deck) # calls dealer_turn method
     if dealer_result > 21
       puts "Dealer Busts. Player Wins!!!"
     elsif player_result > dealer_result
+      if player_result == 21 && player_hand.count == 2
+        puts "BLACKJACK!!!"
+      end
       puts "Player Wins!!!"
     elsif player_result < dealer_result
       puts "Dealer Wins..."
@@ -54,13 +55,10 @@ def dealer_turn(dealer_hand, deck)
 
   while calculate_sum(dealer_hand) < 17 # loop until dealer hand reaches 17 or greater
     puts "Dealer Hits!"
-    dealer_hand << draw_card(deck, "Dealer")  # draw one card
-    dealer_total = calculate_sum(dealer_hand) # compute dealer's hand 
-    puts "Dealer Total: #{dealer_total}"
-    return dealer_total if dealer_total > 21 # returns if dealer busts
+    dealer_hand << draw_card(deck, "Dealer")  # draw one card 
+    puts "Dealer Total: #{calculate_sum(dealer_hand)}"
   end
 
-  puts "Dealer Stays."
   calculate_sum(dealer_hand) # computes and returns dealer's hand
 
 end
@@ -70,8 +68,8 @@ def player_turn(player_hand, deck)
   puts "----------------------------------------"
   puts "Player's Turn!!"
 
-  # infinite loop, breaks on "stay" or when player busts
-  loop do 
+  # breaks on "stay" or when player busts
+  while calculate_sum(player_hand) < 21
     print "Please enter 'hit' or 'stay': "
     hit_or_stay = gets.chomp
 
@@ -80,10 +78,8 @@ def player_turn(player_hand, deck)
     
     if hit_or_stay.downcase == 'hit'
       puts "Player Hits!!"
-      player_hand << draw_card(deck, "Player") # draws a card from deck
+      player_hand << draw_card(deck, "Player") 
       puts "Player Total: #{calculate_sum(player_hand)}"
-
-      break if calculate_sum(player_hand) > 21 # breaks out of loop if player busts
     else
       break # breaks out of loop if player types 'stay'
     end
@@ -94,8 +90,8 @@ end
 
 # computes and returns dealer / player's hand
 def calculate_sum(hand)
-  total = 0 # keep track of sum of cards 
-  ace_count = 0 # keep track of number of aces
+  total = 0 
+  ace_count = 0 
 
   # iterates through hand to compute the total value of the given hand 
   # and to count # of Ace's in the hand 
@@ -110,7 +106,7 @@ def calculate_sum(hand)
     total -= 10 if total > 21  
   end                          
                                
-  total # returns total value of given hand
+  total 
 end
 
 # converts string values into numerical values, since deck is represented by an array of strings
@@ -127,7 +123,7 @@ end
 
 # game repeats until user types "no"
 loop do
-  new_game # starts new game
+  new_game 
   puts "----------------------------------------"
   
   loop do
