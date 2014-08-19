@@ -3,7 +3,7 @@
 This is a console-based blackjack game built using procedural programming.
 
 1. Clone the repository
-    git@github.com:tsufurukawa/procedural_blackjack.git
+    git clone git@github.com:tsufurukawa/procedural_blackjack.git
 2. Chage into project directory
     cd procedural_blackjack
 3. Run the ruby file
